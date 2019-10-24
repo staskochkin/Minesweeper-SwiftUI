@@ -33,15 +33,11 @@ protocol BoardTile {
 }
 
 
-final class Tile: BoardTile, BindableObject {
+final class Tile: BoardTile, ObservableObject, Identifiable {
     internal let id: UUID = UUID()
     
-    let didChange = PassthroughSubject<TileState, Never>()
+    @Published private(set) var state: TileState = .unrevealed
 
-    var state: TileState = .unrevealed {
-        didSet { didChange.send(state) }
-    }
-    
     private(set) var minesAround = 0, isMine = false
     
     func mine() {

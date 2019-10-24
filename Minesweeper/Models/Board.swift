@@ -9,21 +9,27 @@
 import Foundation
 import SwiftUI
 
+typealias Index = (x: Int, y: Int)
 
 struct IndexedTile <T> where T: BoardTile, T: Equatable {
-    var id: UUID = UUID()
-    var index: Index
-    var value: T
+    let id: UUID = UUID()
+    let index: Index
+    let value: T
+    
+    init(index: Index, value: T) {
+        self.value = value
+        self.index = index
+    }
 }
 
-extension IndexedTile: Equatable {
+extension IndexedTile: Identifiable, Equatable {
+    typealias ID = UUID
+    
     static func == (lhs: IndexedTile<T>, rhs: IndexedTile<T>) -> Bool {
         return lhs.value == rhs.value
     }
 }
 
-
-typealias Index = (x: Int, y: Int)
 
 final class Board<T> where T: BoardTile, T: Equatable {
     typealias IndexedTileType = IndexedTile<T>

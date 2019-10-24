@@ -10,9 +10,6 @@ import Foundation
 import SwiftUI
 import Combine
 
-extension IndexedTile: Identifiable {
-    typealias ID = UUID
-}
 
 struct BoardView: View {
     typealias TileType = IndexedTile<Tile>
@@ -23,17 +20,22 @@ struct BoardView: View {
     
     var body: some View {
         ZStack(alignment: .center) {
-            ForEach(self.gameplay.board.tiles.identified(by: \.id)) { tile in
+            ForEach(self.gameplay.board.tiles, id: \.id) { tile in
                 self.view(for: tile, board: self.gameplay.board)
-                .frame(width: 320, height: 400, alignment: .center).clipped()
+                    .frame(
+                        width: 320,
+                        height: 400,
+                        alignment: .center
+                    )
+                    .clipped()
             }
         }
     }
     
     private func preferredSize(tiles: Index, size: CGSize) -> CGFloat {
-        let boardWidth: CGFloat = CGFloat(gameplay.board.size.x)
+        let boardWidth: CGFloat  = CGFloat(gameplay.board.size.x)
         let boardHeight: CGFloat = CGFloat(gameplay.board.size.y)
-        let width: CGFloat = (size.width - (boardWidth + 1) * offset) / boardWidth
+        let width: CGFloat  = (size.width - (boardWidth + 1) * offset) / boardWidth
         let height: CGFloat = (size.height - (boardHeight + 1) * offset) / boardHeight
         return min(width, height)
     }

@@ -18,7 +18,12 @@
 		4206BA2D22C11250009CCA12 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4206BA2C22C11250009CCA12 /* Board.swift */; };
 		4251DC7722C1224D00E34F1C /* BoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4251DC7622C1224D00E34F1C /* BoardView.swift */; };
 		4251DC7922C1639600E34F1C /* TileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4251DC7822C1639600E34F1C /* TileView.swift */; };
+		427AC531236241CD00114315 /* PlayButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 427AC530236241CD00114315 /* PlayButton.swift */; };
 		42C6F41222C21C1300F52679 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42C6F41122C21C1300F52679 /* Extensions.swift */; };
+		42D9266722C938CD001B3DF1 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D9266622C938CD001B3DF1 /* SettingsView.swift */; };
+		42D9266922C94497001B3DF1 /* TImerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D9266822C94497001B3DF1 /* TImerView.swift */; };
+		42D9266B22C9460C001B3DF1 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D9266A22C9460C001B3DF1 /* Settings.swift */; };
+		42D9266D22C94CEE001B3DF1 /* Timing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42D9266C22C94CEE001B3DF1 /* Timing.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -35,7 +40,12 @@
 		4206BA2C22C11250009CCA12 /* Board.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
 		4251DC7622C1224D00E34F1C /* BoardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoardView.swift; sourceTree = "<group>"; };
 		4251DC7822C1639600E34F1C /* TileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TileView.swift; sourceTree = "<group>"; };
+		427AC530236241CD00114315 /* PlayButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayButton.swift; sourceTree = "<group>"; };
 		42C6F41122C21C1300F52679 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		42D9266622C938CD001B3DF1 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		42D9266822C94497001B3DF1 /* TImerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TImerView.swift; sourceTree = "<group>"; };
+		42D9266A22C9460C001B3DF1 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		42D9266C22C94CEE001B3DF1 /* Timing.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Timing.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +111,8 @@
 			isa = PBXGroup;
 			children = (
 				4206BA2822C111C9009CCA12 /* Gameplay.swift */,
+				42D9266A22C9460C001B3DF1 /* Settings.swift */,
+				42D9266C22C94CEE001B3DF1 /* Timing.swift */,
 				4206BA2C22C11250009CCA12 /* Board.swift */,
 				4206BA2A22C111D4009CCA12 /* Tile.swift */,
 			);
@@ -111,8 +123,11 @@
 			isa = PBXGroup;
 			children = (
 				4206BA1522C1115E009CCA12 /* GameView.swift */,
+				427AC530236241CD00114315 /* PlayButton.swift */,
+				42D9266622C938CD001B3DF1 /* SettingsView.swift */,
 				4251DC7622C1224D00E34F1C /* BoardView.swift */,
 				4251DC7822C1639600E34F1C /* TileView.swift */,
+				42D9266822C94497001B3DF1 /* TImerView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -188,11 +203,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				42D9266922C94497001B3DF1 /* TImerView.swift in Sources */,
+				427AC531236241CD00114315 /* PlayButton.swift in Sources */,
 				4251DC7722C1224D00E34F1C /* BoardView.swift in Sources */,
 				42C6F41222C21C1300F52679 /* Extensions.swift in Sources */,
 				4206BA2922C111C9009CCA12 /* Gameplay.swift in Sources */,
+				42D9266D22C94CEE001B3DF1 /* Timing.swift in Sources */,
 				4251DC7922C1639600E34F1C /* TileView.swift in Sources */,
 				4206BA1222C1115E009CCA12 /* AppDelegate.swift in Sources */,
+				42D9266B22C9460C001B3DF1 /* Settings.swift in Sources */,
+				42D9266722C938CD001B3DF1 /* SettingsView.swift in Sources */,
 				4206BA2D22C11250009CCA12 /* Board.swift in Sources */,
 				4206BA2B22C111D4009CCA12 /* Tile.swift in Sources */,
 				4206BA1422C1115E009CCA12 /* SceneDelegate.swift in Sources */,

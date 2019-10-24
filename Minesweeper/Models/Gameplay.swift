@@ -27,20 +27,18 @@ extension BoardTile {
     }
 }
 
-
-final class Gameplay: BindableObject {
+final class Gameplay: ObservableObject {
     typealias BoardType = Board<Tile>
+
+    @Published private(set) var state: GameState = .idle
+    @Published private(set) var board: BoardType
     
-    let didChange = PassthroughSubject<GameState, Never>()
-    
-    private(set) var board: BoardType
-    
-    private(set) var state: GameState = .idle {
-        didSet { didChange.send(state) }
-    }
-    
+    private var settings: Settings
+    private(set) var timing: Timing? = nil
+
     init(x: Int, y: Int) {
         board = BoardType(x: x, y: y)
+        settings = Settings(difficulty: 0, timerEnabled: true)
     }
     
     func reveal(_ tile: BoardTile) {
@@ -62,7 +60,9 @@ final class Gameplay: BindableObject {
         defer { state = .started }
         board.arrange()
         board.startGame(tile as? Tile)
-        guard  let tile = tile else { return }
+        timing?.stop()
+        startTimingIfNeeded()
+        guard let tile = tile else { return }
         _reveal(tile: tile)
     }
     
@@ -72,10 +72,10 @@ final class Gameplay: BindableObject {
         tile.reveal()
         
         if tile.state == .activated {
-            board.endGame()
+            endGame()
             state = .completed(false)
         } else if board.isWin {
-            board.endGame()
+            endGame()
             state = .completed(true)
         } else if tile.minesAround == 0 {
             board
@@ -88,7 +88,19 @@ final class Gameplay: BindableObject {
     private func _mark(tile: BoardTile) {
         tile.mark()
         guard board.isWin else { return }
-        board.endGame()
+        endGame()
         state = .completed(true)
+    }
+
+    private func startTimingIfNeeded() {
+        guard settings.timerEnabled else { return }
+        timing = Timing()
+        timing?.start()
+    }
+    
+    private func endGame() {
+        board.endGame()
+        timing?.stop()
+        timing = nil
     }
 }

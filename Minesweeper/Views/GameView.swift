@@ -14,40 +14,42 @@ struct GameView : View {
     var body: some View {
         NavigationView {
             VStack {
-                HStack(alignment: .center) {
-                    SettingsButton().frame(width: 33, alignment: .leading)
-                    self.title.frame(alignment: .center)
-                    self.gameplay.timing.flatMap { TimerView(timing: $0) }
-                }
-                .padding()
-                GeometryReader { proxy in
-                    VStack {
-                        ZStack(alignment: .top) { BoardView().environmentObject(self.gameplay) }
-                            .frame(alignment: .center)
+                if gameplay.isStarted {
+                    Spacer()
+                    gameplay.timing.map(TimerView.init)
+                    GeometryReader { proxy in
+                        self.boardView
+                            .frame(
+                                width: proxy.boardSize,
+                                height:  proxy.boardSize,
+                                alignment: .center
+                            )
                     }
-                    .frame(
-                        width: proxy.size.width,
-                        height: proxy.size.height,
-                        alignment: .center)
-                }.edgesIgnoringSafeArea(.all)
-                PlayButton(action: self.startNewGame).environmentObject(self.gameplay)
+                    .transition(self.transition)
+                    .animation(self.animation)
+                }
+                
+                PlayButton(action: self.startNewGame)
+                    .environmentObject(self.gameplay)
             }
-        }
-    }
-    
-    var title: Text {
-        Text("Minesweeper 💣")
+            .transition(transition)
+            .navigationBarTitle("Minesweeper", displayMode: .inline)
+            .navigationBarItems(trailing: SettingsButton())
             .font(Font.system(.headline, design: Font.Design.monospaced))
             .foregroundColor(.primary)
+        }
     }
     
     func startNewGame() {
-        withAnimation {
-            gameplay.startGame()
-        }
+        gameplay.startGame()
     }
     
-    var transition: AnyTransition {
+    private var boardView: some View {
+        return BoardView()
+            .environmentObject(self.gameplay)
+    }
+    
+    private var transition: AnyTransition {
         let insertion = AnyTransition
             .move(edge: .top)
             .combined(with: .opacity)
@@ -57,20 +59,29 @@ struct GameView : View {
         return .asymmetric(insertion: insertion, removal: removal)
     }
     
-    var animation: Animation {
+    private var animation: Animation {
         Animation.spring().speed(2)
     }
 }
 
+private extension GeometryProxy {
+    var boardSize: CGFloat {
+        return min(size.width, size.height) - 16
+    }
+}
 
 private struct SettingsButton: View {
+    @State private var isShown: Bool = false
     var body: some View {
-        let image = Image(systemName: "gear")
-            .renderingMode(.template)
-            .foregroundColor(Color.secondary)
-            .imageScale(.medium)
-            .padding()
-        return NavigationLink(destination: SettingsView()) { image }
+        return Button(action: {
+            self.isShown.toggle()
+        }) {
+            Image(systemName: "gear")
+                .renderingMode(.template)
+                .foregroundColor(Color.secondary)
+                .imageScale(.medium)
+        }
+        .sheet(isPresented: self.$isShown) { SettingsView() }
     }
     
     var animation: Animation {
@@ -83,7 +94,7 @@ private struct SettingsButton: View {
 #if DEBUG
 struct ContentView_Previews : PreviewProvider {
     static let gameplay: Gameplay = {
-        let gameplay = Gameplay(x: 30, y: 30)
+        let gameplay = Gameplay(x: 3, y: 3)
         gameplay.startGame()
         return gameplay
     }()

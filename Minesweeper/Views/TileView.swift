@@ -31,6 +31,7 @@ struct TileView: View {
     }
     
     @ObservedObject var tile: Tile
+    @GestureState var isLongPressed = false
     
     let gameplay: Gameplay
     
@@ -45,20 +46,36 @@ struct TileView: View {
                             width: groupGeometry.size.height,
                             height: groupGeometry.size.width,
                             alignment: .center
-                    )
+                        )
                 }
             }
             .saturation(1.5)
-            .gesture(self.tapGesture)
-            .gesture(self.longPressGesture)
             .background(self.backgroundStyle)
             .cornerRadius(CGFloat.greatestFiniteMagnitude)
             .shadow(radius: 5)
+            .scaleEffect(self.isLongPressed ? 1.3 : 1)
             .frame(
                 width: geometry.size.height * 0.95,
                 height: geometry.size.width * 0.95,
                 alignment: .center
             )
+            .gesture(self.tapGesture)
+            .simultaneousGesture(self.longPressGesture)
+            .animation(.spring())
+        }
+        .transition(AnyTransition.tile)
+        .animation(Animation.tile)
+    }
+    
+    func reveal() {
+        withAnimation {
+            gameplay.reveal(tile.self)
+        }
+    }
+    
+    func mark() {
+        withAnimation {
+            gameplay.mark(tile.self)
         }
     }
 }
@@ -101,14 +118,6 @@ private extension TileView {
         )
     }
     
-    func reveal() {
-        gameplay.reveal(tile.self)
-    }
-    
-    func mark() {
-        gameplay.mark(tile.self)
-    }
-    
     var tapGesture: some Gesture {
         TapGesture()
             .onEnded(self.reveal)
@@ -120,16 +129,19 @@ private extension TileView {
             maximumDistance: 5
         )
             .onEnded { _ in self.mark() }
+            .updating($isLongPressed) { value, state, transcation in state = value }
     }
     
     var contentBody: some View {
+        let view: Text
         switch tile.state {
-        case .unrevealed:           return Constants.unrevealedView
-        case .revealed(let count):  return Constants.revealedView(count)
-        case .activated:            return Constants.activatedView
-        case .deactivated:          return Constants.deactivatedView
-        case .marked:               return Constants.markedView
+        case .unrevealed:           view = Constants.unrevealedView
+        case .revealed(let count):  view = Constants.revealedView(count)
+        case .activated:            view = Constants.activatedView
+        case .deactivated:          view = Constants.deactivatedView
+        case .marked:               view = Constants.markedView
         }
+        return view
     }
     
     func revealedBacgroundGradient(_ count: Int) -> Gradient {
@@ -146,6 +158,29 @@ private extension TileView {
             colors[count - 1],
             colors[min(colors.count - 1, count + 1)]
         ])
+    }
+}
+
+private extension AnyTransition {
+    static var tile: AnyTransition {
+        let insertion = AnyTransition
+            .scale(scale: 1.3)
+            .combined(with: .opacity)
+        let removal = AnyTransition
+            .scale(scale: 0.6)
+            .combined(with: .opacity)
+        return .asymmetric(
+            insertion: insertion,
+            removal: removal
+        )
+    }
+}
+
+private extension Animation {
+    static var tile: Animation {
+        return Animation
+            .easeIn
+            .delay(Double.random(in: 0.1...0.5))
     }
 }
 

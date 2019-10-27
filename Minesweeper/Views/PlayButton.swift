@@ -25,11 +25,11 @@ struct PlayButton: View {
         
         let background = LinearGradient(
             gradient: props.gradient,
-            startPoint: UnitPoint(x: 0, y: 0),
-            endPoint: UnitPoint(x: 1, y: 1)
+            startPoint: UnitPoint(x: 0.5, y: 0),
+            endPoint: UnitPoint(x: 1, y: 0.5)
         )
         
-        return Button(action: action) {
+        return Button(action: withAnimation { action }) {
             props.text.frame(
                 width: 320,
                 height: 33,
@@ -37,6 +37,29 @@ struct PlayButton: View {
             )}
             .background(background)
             .cornerRadius(16)
+            .transition(transition)
+    }
+    
+    private var transition: AnyTransition {
+        let insertion = AnyTransition
+            .scale(scale: 1.2)
+            .combined(with: .opacity)
+            .animation(animation)
+        let removal = AnyTransition
+            .scale(scale: 0.8)
+            .combined(with: .opacity)
+            .animation(animation)
+        return .asymmetric(
+            insertion: insertion,
+            removal: removal
+        )
+    }
+    
+    private var animation: Animation {
+        Animation
+            .easeInOut
+            .speed(2)
+            .delay(0.1)
     }
     
     private func idle() -> ViewProps {
@@ -55,10 +78,10 @@ struct PlayButton: View {
         return (
             Text("Skip")
                 .font(Font.system(size: 12, design: .rounded))
-                .foregroundColor(.accentColor),
+                .foregroundColor(.gray),
             Gradient(colors: [
-                Color.white.opacity(0.1),
-                Color.black.opacity(0.1)
+                Color.gray.opacity(0.3),
+                Color.black.opacity(0.2)
             ])
         )
     }
@@ -74,3 +97,25 @@ struct PlayButton: View {
         )
     }
 }
+
+#if DEBUG
+struct PlayButton_Previews : PreviewProvider {
+    static let idleGameplay: Gameplay = {
+        return Gameplay(x: 1, y: 1)
+    }()
+    
+    static let startedGameplay: Gameplay = {
+        let gameplay = Gameplay(x: 1, y: 1)
+        gameplay.startGame()
+        return gameplay
+    }()
+    
+    static var previews: some View {
+        Group {
+            PlayButton(action: {}).environmentObject(idleGameplay)
+            PlayButton(action: {}).environmentObject(startedGameplay)
+        }.previewLayout(.fixed(width: 350, height: 50))
+        
+    }
+}
+#endif

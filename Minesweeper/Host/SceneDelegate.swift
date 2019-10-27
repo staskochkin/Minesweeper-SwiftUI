@@ -11,12 +11,14 @@ import SwiftUI
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     private lazy var gameplay: Gameplay = {
-        Gameplay(x: 8, y: 8)
+        Gameplay(x: 10, y: 10)
     }()
     
     var window: UIWindow?
 
-    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+    func scene(_ scene: UIScene,
+               willConnectTo session: UISceneSession,
+               options connectionOptions: UIScene.ConnectionOptions) {
         guard let scene = scene as? UIWindowScene else { return }
         let window = UIWindow(windowScene: scene)
         window.rootViewController = UIHostingController(rootView: GameView().environmentObject(gameplay))

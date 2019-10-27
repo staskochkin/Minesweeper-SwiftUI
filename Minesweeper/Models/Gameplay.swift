@@ -35,7 +35,13 @@ final class Gameplay: ObservableObject {
     
     private var settings: Settings
     private(set) var timing: Timing? = nil
-
+    var isStarted: Bool {
+        switch state {
+        case .idle: return false
+        default: return true
+        }
+    }
+    
     init(x: Int, y: Int) {
         board = BoardType(x: x, y: y)
         settings = Settings(difficulty: 0, timerEnabled: true)
@@ -101,6 +107,5 @@ final class Gameplay: ObservableObject {
     private func endGame() {
         board.endGame()
         timing?.stop()
-        timing = nil
     }
 }

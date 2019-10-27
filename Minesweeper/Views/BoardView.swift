@@ -16,18 +16,18 @@ struct BoardView: View {
     
     @EnvironmentObject var gameplay: Gameplay
     
-    private let offset: CGFloat = 8
+    private let offset: CGFloat = 12
     
     var body: some View {
         ZStack(alignment: .center) {
-            ForEach(self.gameplay.board.tiles, id: \.id) { tile in
-                self.view(for: tile, board: self.gameplay.board)
-                    .frame(
-                        width: 320,
-                        height: 400,
-                        alignment: .center
-                    )
-                    .clipped()
+            GeometryReader() { proxy in
+                ForEach(self.gameplay.board.tiles, id: \.id) { tile in
+                    self.view(
+                        for: tile,
+                        board: self.gameplay.board,
+                        size: proxy.size)
+                }
+                .clipped()
             }
         }
     }
@@ -35,16 +35,17 @@ struct BoardView: View {
     private func preferredSize(tiles: Index, size: CGSize) -> CGFloat {
         let boardWidth: CGFloat  = CGFloat(gameplay.board.size.x)
         let boardHeight: CGFloat = CGFloat(gameplay.board.size.y)
+        
         let width: CGFloat  = (size.width - (boardWidth + 1) * offset) / boardWidth
         let height: CGFloat = (size.height - (boardHeight + 1) * offset) / boardHeight
+        
         return min(width, height)
     }
     
     private func view(for tile:TileType,
                       board: Board<Tile> ,
-                      size: CGSize = CGSize(width: 320, height: 500)) -> some View {
+                      size: CGSize) -> some View {
         let tileSize: CGFloat = preferredSize(tiles: board.size, size: size)
-        
         let x: CGFloat = CGFloat(tile.index.x) * (tileSize + offset) + tileSize / 2 + offset
         let y: CGFloat = CGFloat(tile.index.y) * (tileSize + offset) + tileSize / 2 + offset
         
